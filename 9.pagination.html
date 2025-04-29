@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pagination Example</title>
+    <script 
+        defer 
+        src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js">
+    </script>
+
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        .pagination {
+            display: flex;
+            list-style: none;
+            padding: 0;
+        }
+        .pagination li {
+            margin: 0 5px;
+            cursor: pointer;
+            padding: 5px 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .active {
+            font-weight: bold;
+            background-color: #007bff;
+            color: white;
+        }
+    </style>
+</head>
+<body x-data="paginationComponent()">
+
+    <h1>Pagination Example</h1>
+
+    <div>
+        <!-- Daftar item yang akan ditampilkan -->
+        <ul>
+            <template x-for="item in paginatedData" :key="item.id">
+                <li x-text="item.name"></li>
+            </template>
+        </ul>
+
+        <!-- Navigasi pagination -->
+        <ul class="pagination">
+            <li @click="prevPage()" :class="{ 'active': currentPage === 1 }">Prev</li>
+            <template x-for="page in totalPages()" :key="page">
+                <li @click="goToPage(page)" :class="{ 'active': currentPage === page }" x-text="page"></li>
+            </template>
+            <li @click="nextPage()" :class="{ 'active': currentPage === totalPages() }">Next</li>
+        </ul>
+    </div>
+
+    <script>
+        function paginationComponent() {
+            return {
+                currentPage: 1, // Halaman saat ini
+                itemsPerPage: 5, // Jumlah item per halaman
+                items: [ // Data yang akan dipaginasikan
+                    { id: 1, name: 'Item 1' },
+                    { id: 2, name: 'Item 2' },
+                    { id: 3, name: 'Item 3' },
+                    { id: 4, name: 'Item 4' },
+                    { id: 5, name: 'Item 5' },
+                    { id: 6, name: 'Item 6' },
+                    { id: 7, name: 'Item 7' },
+                    { id: 8, name: 'Item 8' },
+                    { id: 9, name: 'Item 9' },
+                    { id: 10, name: 'Item 10' },
+                    { id: 11, name: 'Item 11' },
+                    { id: 12, name: 'Item 12' },
+                    { id: 13, name: 'Item 13' },
+                    { id: 14, name: 'Item 14' },
+                    { id: 15, name: 'Item 15' },
+                ],
+
+                // Mengambil data yang sesuai dengan halaman saat ini
+                paginatedData() {
+                    const start = (this.currentPage - 1) * this.itemsPerPage; // Menghitung indeks awal
+                    console.log(this.currentPage)
+                    return this.items.slice(start, start + this.itemsPerPage); // Mengembalikan subset data
+                },
+
+                // Menghitung total halaman
+                totalPages() {
+                    return Math.ceil(this.items.length / this.itemsPerPage); // Menghitung total halaman
+                },
+
+                // Mengubah halaman ke halaman yang dipilih
+                goToPage(page) {
+                    this.currentPage = page; // Mengubah halaman saat ini
+                },
+
+                // Navigasi ke halaman berikutnya
+                nextPage() {
+                    if (this.currentPage < this.totalPages()) {
+                        this.currentPage++; // Menaikkan halaman saat ini
+                    }
+                },
+
+                // Navigasi ke halaman sebelumnya
+                prevPage() {
+                    if (this.currentPage > 1) {
+                        this.currentPage--; // Menurunkan halaman saat ini
+                    }
+                }
+            }
+        }
+     
+        
+    </script>
+    <script src="9.pagination.js"></script>
+</body>
+</html>
