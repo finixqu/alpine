@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kalkulator1</title>
+    <script 
+        defer 
+        src="https://cdn.jsdelivr.net/npm/alpinejs@3.x.x/dist/cdn.min.js">
+    </script>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        button:hover{
+            background-color: aquamarine;
+        }
+    </style>
+</head>
+<body class="bg-gray-200 flex items-center justify-center h-screen">
+    <section x-data="calculator()" 
+             x-init="keyTombol()" 
+             class="bg-white  p-6 rounded shadow-md w-80">
+        <div class="mb-5">
+            <input class="text-right border border-gray-400 p-2 rounded text-2xl w-full" 
+                    x-model="inputan"
+                    readonly>
+        </div>
+        <div class="grid grid-cols-4 gap-2">
+            <button x-on:click="clear()" class="bg-red-500 p-2 text-white rounded">AC</button>
+            <button x-on:click="hapus()" class="bg-green-500 p-2 text-white rounded" >Del</button>
+            <button x-on:click="nilaiAwal('%')" class="bg-orange-500 p-2 text-white rounded">%</button>
+            <button x-on:click="nilaiAwal('/')" class="bg-blue-500 p-2 text-white rounded">/</button>
+
+            <button x-on:click="nilaiAwal('7')" class="bg-yellow-500 p-2 text-white rounded">7</button>
+            <button x-on:click="nilaiAwal('8')" class="bg-yellow-500 p-2 text-white rounded">8</button>
+            <button x-on:click="nilaiAwal('9')" class="bg-yellow-500 p-2 text-white rounded">9</button>
+            <button x-on:click="nilaiAwal('*')" class="bg-blue-500 p-2 text-white rounded">*</button>
+
+            <button x-on:click="nilaiAwal('4')" class="bg-yellow-500 p-2 text-white rounded">4</button>
+            <button x-on:click="nilaiAwal('5')" class="bg-yellow-500 p-2 text-white rounded">5</button>
+            <button x-on:click="nilaiAwal('6')" class="bg-yellow-500 p-2 text-white rounded">6</button>
+            <button x-on:click="nilaiAwal('+')" class="bg-blue-500 p-2 text-white rounded">+</button>
+
+            <button x-on:click="nilaiAwal('1')" class="bg-yellow-500 p-2 text-white rounded">1</button>
+            <button x-on:click="nilaiAwal('2')" class="bg-yellow-500 p-2 text-white rounded">2</button>
+            <button x-on:click="nilaiAwal('3')" class="bg-yellow-500 p-2 text-white rounded">3</button>
+            <button x-on:click="nilaiAwal('-')" class="bg-blue-500 p-2 text-white rounded">-</button>
+
+            <button x-on:click="nilaiAwal('.')" class="bg-orange-500 p-2 text-white rounded">.</button>
+            <button x-on:click="nilaiAwal('0')" class="bg-yellow-500 p-2 text-white rounded">0</button>
+            <button x-on:click="jumlah()" class="col-span-2 bg-blue-500 p-2 text-white rounded">=</button>
+        </div>
+    </section>
+
+    <script>
+        function calculator(){
+            return {
+                inputan: '',
+
+                nilaiAwal (nilai){
+                    this.inputan += nilai;
+                    console.log(typeof this.inputan)
+                },
+
+                clear(){
+                    this.inputan = '';
+                },
+
+                hapus (){              
+                    if(this.inputan.length > 0){
+                        this.inputan = this.inputan.slice(0, -1);
+                    }
+                },
+
+                jumlah (){
+                    try {
+
+                        if(this.inputan.includes('%')){
+                            this.inputan = this.persentase(this.inputan)
+                        }
+                        this.inputan = eval(this.inputan)
+                        this.inputan = this.inputan.toString() // mengembalikan nilai menjadi string agar dapat di hapus menggunganakan slice
+
+                    }catch(e){
+                        this.inputan = 'error';
+                    }
+                },
+
+                persentase(masuk){
+                    const regex = /(\d+\.?\d*)([+\-*/])(\d+\.?\d*)%/;
+                    const pencarian = masuk.match(regex);
+
+                    if(pencarian){
+                        const [total, nilai1, operator, nilai2] = pencarian;
+                        const hasilPersen = (parseFloat(nilai2) / 100) * parseFloat(nilai1);
+
+                        switch(operator){
+                            case '/':
+                               return parseFloat(nilai1) / hasilPersen;
+                            break;
+
+                            case '*':
+                               return parseFloat(nilai1) * hasilPersen;
+                            break;
+
+                            case '+':
+                               return parseFloat(nilai1) + hasilPersen;
+                            break;
+
+                            case '-':
+                               return parseFloat(nilai1) - hasilPersen;
+                            break;
+                        }
+                    }
+                    return masuk
+                    
+
+                },
+
+                keyTombol(){
+                    document.addEventListener('keydown', (event)=>{
+                        if (event.key >= '0' && event.key <= '9'){
+                            this.inputan += event.key;
+                        }else if(['/', '*', '+', '-','.', '%'].includes(event.key)){
+                            this.inputan += event.key
+                        }else if(event.key == '=' || event.key == 'Enter'){
+                            this.jumlah();
+                        }else if(event.key == 'Backspace'){
+                            this.hapus();
+                        }else if (event.key == 'Delete'){
+                            this.clear();
+                        }
+
+                    })
+                }
+            }
+        }
+    </script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- <!DOCTYPE html> 
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kalkulator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+
+</head>
+<body class="bg-gray-200 flex items-center justify-center h-screen " >
+    <div id="calculator" class="bg-white shadow-md w-80 p-6">
+        <div id="calcInput" class="mb-5 border border-gray-400 w-full">
+            <input id="hasil" class="p-3 w-full">
+            
+        </div>
+        
+        <div id="tombol" class="grid grid-cols-4 bg gap-2">
+           
+            <button>AC</button>
+            <button>Del</button>
+            <button>%</button>
+            <button>/</button>
+
+            <button>7</button>
+            <button>8</button>
+            <button>9</button>
+            <button>*</button>
+
+            <button>4</button>
+            <button>5</button>
+            <button>6</button>
+            <button>+</button>
+
+            <button>1</button>
+            <button>2</button>
+            <button>3</button>
+            <button>-</button>
+
+            <button>.</button>
+            <button>0</button>
+            <button>=</button>
+        </div>
+    </div>
+     <script>
+        // let hasil = document.querySelector('#hasil');
+        // let masukan = document.querySelector('#masukan');
+        // let tombol = document.querySelectorAll('button');
+        // let hasilAkhir = '';
+        // let nilai1  = [];
+        // let operator = [];
+        // let nilai2 = [];
+        // [...tombol].map(function(pilihanTombol){
+            // pilihanTombol.addEventListener('click', function (e){
+                // console.log(this.innerText)
+                // switch(this.innerHTML){
+                    // case 'AC':
+                        // hasil.value =""
+                    // break;
+                    // case '=':
+                        // jumlahkan(hasil.value);
+                    // break;
+                    // case 'Del':
+                        // hasil.value = hasil.value.slice(0, -1);
+                    // break;
+                    // case '.':
+                        // nilai1.push(this.innerText)
+                        // hasil.value = nilai1.join('')
+                    // default:
+                        // hasil.value += this.innerText;
+                // }
+            // })
+        // })
+        // function jumlahkan (nilai){
+            // if(nilai.includes('%')){
+                // const reg = /(\d+\.?\d*)([+\-*/])(\d+\.?\d*)%/;
+                // const cari = nilai.match(reg);
+                // console.log(cari)
+                // if(cari){
+                    // const [total, angka1, operator, angka2] = cari;
+                    // const perSeratus = (parseFloat(angka2) / 100) * parseFloat(angka1)
+                    // console.log(total, angka1, angka2)
+                    // switch(operator){
+                        // case '/':
+                        //    hasil.value = parseFloat(angka1) / perSeratus;
+                        // break;
+                        // case '*':
+                        //    hasil.value = parseFloat(angka1) * perSeratus;
+                        // break;
+                        // case '+':
+                        //    hasil.value = parseFloat(angka1) + perSeratus;
+                        // break;
+                        // case '-':
+                        //    hasil.value = parseFloat(angka1) - perSeratus;
+                        // break;
+                    // };
+                // }
+            // }else{
+                // hasil.value = eval(nilai);
+            // }           
+        // }
+   
+</body>
+</html> -->
